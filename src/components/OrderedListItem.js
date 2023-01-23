@@ -35,7 +35,8 @@ const OrderedListItem = (props: OrderedListItemPropsType): any => {
     separator,
     customStyles,
     depth,
-    defaultMarginLeft,
+    depthMargin,
+    noDepthMargin,
   } = props;
 
   const orderedListItemCustomStyleContainer = customStyles && customStyles.orderedListItemContainer;
@@ -43,10 +44,9 @@ const OrderedListItem = (props: OrderedListItemPropsType): any => {
 
   const marginLeftWithDepth = (
     orderedListItemCustomStyleNumber && orderedListItemCustomStyleNumber.marginLeft)
-    ? depth * orderedListItemCustomStyleNumber.marginLeft : depth * defaultMarginLeft;
+    ? depth * orderedListItemCustomStyleNumber.marginLeft : depth * depthMargin;
 
-  const marginLeftWithoutDepth = 24;
-  const marginLeft = depth > 0 ? marginLeftWithDepth : marginLeftWithoutDepth;
+  const marginLeft = depth > 0 ? marginLeftWithDepth : noDepthMargin;
 
   return (
     <View style={[styles.orderedListItemContainer, orderedListItemCustomStyleContainer]}>
@@ -67,7 +67,8 @@ OrderedListItem.defaultProps = {
   counter: 1,
   depth: 0,
   separator: '.',
-  defaultMarginLeft: 8,
+  depthMargin: 8,
+  noDepthMargin: 0,
 };
 
 export default OrderedListItem;

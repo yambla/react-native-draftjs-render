@@ -26,6 +26,7 @@ type ParamsType = {
   orderedListSeparator?: string,
   customBlockHandler?: (Object, ParamsType) => any,
   depthMargin?: number,
+  noDepthMargin?: number,
   textProps: ?Object,
 };
 
@@ -41,6 +42,7 @@ const getBlocks = (params: ParamsType): ?Array<React$Element<*>> => {
     orderedListSeparator,
     customBlockHandler,
     depthMargin,
+    noDepthMargin,
     atomicHandler,
   } = params;
 
@@ -107,6 +109,25 @@ const getBlocks = (params: ParamsType): ?Array<React$Element<*>> => {
         depth: item.depth,
       };
 
+      // Handle Atomic
+      if (item.type.includes('atomic')) {
+        if (atomicHandler) {
+          const viewBefore = checkCounter(counters);
+          const atomic = atomicHandler(item, contentState.entityMap);
+          if (viewBefore) {
+            return (
+              <View key={generateKey()}>
+                {viewBefore}
+                {atomic}
+              </View>
+            );
+          }
+          return atomic;
+        }
+        return item;
+      }
+
+      // Handle Others
       switch (item.type) {
         case 'unstyled':
         case 'paragraph':
@@ -130,23 +151,6 @@ const getBlocks = (params: ParamsType): ?Array<React$Element<*>> => {
               />
             </View>
           );
-        }
-
-        case 'atomic': {
-          if (atomicHandler) {
-            const viewBefore = checkCounter(counters);
-            const atomic = atomicHandler(item, contentState.entityMap);
-            if (viewBefore) {
-              return (
-                <View key={generateKey()}>
-                  {viewBefore}
-                  {atomic}
-                </View>
-              );
-            }
-            return atomic;
-          }
-          return item;
         }
 
         case 'blockquote': {
@@ -215,7 +219,8 @@ const getBlocks = (params: ParamsType): ?Array<React$Element<*>> => {
                 entityMap={contentState.entityMap}
                 customStyles={customStyles}
                 navigate={navigate}
-                defaultMarginLeft={depthMargin}
+                depthMargin={depthMargin}
+                noDepthMargin={noDepthMargin}
                 textProps={textProps}
               />
             </View>
