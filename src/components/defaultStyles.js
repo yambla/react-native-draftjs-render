@@ -66,7 +66,6 @@ const defaultStyles = (PlatformOS: string): Object => StyleSheet.create({
   blockquote: {
     fontSize: 14,
     fontWeight: 'normal',
-    fontStyle: 'italic',
     marginLeft: 16,
   },
 });
